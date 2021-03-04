@@ -114,6 +114,27 @@ nodeTests =
         ]
 
 
+selfClosingTests : Test
+selfClosingTests =
+    test "self-closing svg path"
+        (testParse
+            """<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="1 2 3" clip-rule="evenodd" /></svg>"""
+            (Element "svg"
+                [ ( "viewbox", "0 0 20 20" )
+                , ( "fill", "currentColor" )
+                , ( "aria-hidden", "true" )
+                ]
+                [ Element "path"
+                    [ ( "fill-rule", "evenodd" )
+                    , ( "d", "1 2 3" )
+                    , ( "clip-rule", "evenodd" )
+                    ]
+                    []
+                ]
+            )
+        )
+
+
 nodeToStringTests : Test
 nodeToStringTests =
     describe "nodeToString"
@@ -254,6 +275,7 @@ suite =
         , commentTests
         , attributeTests
         , errorTests
+        , selfClosingTests
 
         --, scriptTests
         ]

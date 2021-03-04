@@ -260,10 +260,16 @@ element =
                         |. Parser.chompIf ((==) '>')
 
                 else
-                    Parser.succeed (Element name attributes)
-                        |. Parser.chompIf ((==) '>')
-                        |= many (Parser.backtrackable node)
-                        |. closingTag name
+                    Parser.oneOf
+                        [ Parser.chompIf ((==) '/')
+                            |. Parser.chompIf ((==) '>')
+                            |> Parser.map (\_ -> [])
+                        , Parser.succeed identity
+                            |. Parser.chompIf ((==) '>')
+                            |= many (Parser.backtrackable node)
+                            |. closingTag name
+                        ]
+                        |> Parser.map (Element name attributes)
             )
 
 
